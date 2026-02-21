@@ -39,9 +39,9 @@ Abra `http://localhost:5173` no browser e permita o acesso à localização.
 
 ## Deploy
 
-**Servidor** (Render / Railway) → comando: `node index.js`
+**Servidor** Render  → comando: `node index.js`
 
-**Cliente** (Vercel / Netlify) → build: `npm run build`, pasta: `dist`
+**Cliente** Vercel  → build: `npm run build`, pasta: `dist`
 
 ## Tecnologias
 
