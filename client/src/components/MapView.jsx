@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useRef } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -20,20 +21,33 @@ const OTHER_USER_ICON = new L.Icon({
   shadowSize: [41, 41],
 });
 
+function FlyToUser({ position }) {
+  const map = useMap();
+  const hasFlewRef = useRef(false);
+
+  if (position && !hasFlewRef.current) {
+    map.flyTo(position, 15, { duration: 1.5 });
+    hasFlewRef.current = true;
+  }
+
+  return null;
+}
+
 export default function MapView({ users, currentSocketId }) {
   const entries = Object.entries(users);
   const currentUser = users[currentSocketId];
 
-  const center = currentUser
+  const userPosition = currentUser
     ? [currentUser.lat, currentUser.lng]
-    : [-8.8383, 13.2344];
+    : null;
 
   return (
-    <MapContainer center={center} zoom={13} className="map-container">
+    <MapContainer center={[-8.8383, 13.2344]} zoom={13} className="map-container">
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <FlyToUser position={userPosition} />
       {entries.map(([id, { lat, lng }]) => {
         const isCurrentUser = id === currentSocketId;
         return (
@@ -44,7 +58,7 @@ export default function MapView({ users, currentSocketId }) {
           >
             <Popup>
               <div className="marker-popup">
-                <strong>{isCurrentUser ? "You" : `User ${id.slice(0, 6)}`}</strong>
+                <strong>{isCurrentUser ? "Tu" : `Usuário ${id.slice(0, 6)}`}</strong>
                 <span>Lat: {lat.toFixed(6)}</span>
                 <span>Lng: {lng.toFixed(6)}</span>
               </div>
